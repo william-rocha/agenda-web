@@ -1,0 +1,109 @@
+<mat-toolbar color="primary">
+  <span>Lista de Contatos</span>
+  <span class="spacer"></span>
+</mat-toolbar>
+
+<div class="main-body">
+  <div>
+    <div class="example-button-row custom-btn">
+      <button mat-raised-button color="accent" (click)="openModal()">
+        Adicionar Contato
+      </button>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Filtrar Nome</mat-label>
+        <input
+          #inputContact
+          matInput
+          (keyup)="applyFilter($event, 'nome')"
+          placeholder="Filtre por Nome"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Filtrar Telefone</mat-label>
+        <input
+          #inputContact
+          matInput
+          (keyup)="applyFilter($event, 'telefone')"
+          placeholder="Filtre por Telefone"
+        />
+      </mat-form-field>
+    </div>
+
+    <!-- LOADING -->
+    <div class="container-loading">
+      <div *ngIf="isLoading" class="loading-shade">
+        <ng-container>
+          <mat-spinner></mat-spinner>
+        </ng-container>
+      </div>
+
+      <!-- TABELA -->
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>name</th>
+            <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="age">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>age</th>
+            <td mat-cell *matCellDef="let row">{{ row.idade }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row.numero && row.numero.length > 0">
+                <div *ngFor="let phone of row.numero">{{ phone.numero }},</div>
+              </ng-container>
+              <div *ngIf="!row.numero || row.numero.length === 0">N/A</div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Ações</th>
+            <td mat-cell *matCellDef="let row">
+              <button
+                mat-icon-button
+                matTooltipPosition="before"
+                matTooltip="Editar"
+                (click)="openEditModal(row)"
+              >
+                <mat-icon color="primary">edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matTooltipPosition="after"
+                matTooltip="Deletar"
+                (click)="deletePhoneContact(row.id)"
+              >
+                <mat-icon color="warn">delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr class="mat-row" *matNoDataRow class="message-empty">
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              Sem dados para apresentar
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <mat-paginator
+    [pageSizeOptions]="[25, 100]"
+    aria-label="Select page of users"
+  ></mat-paginator>
+</div>

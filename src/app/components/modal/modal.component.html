@@ -1,0 +1,82 @@
+<div mat-dialog-title>
+  <h1>{{ data ? "Atualizar" : "Adicionar" }} Contato</h1>
+</div>
+<form [formGroup]="form" class="example-form">
+  <div mat-dialog-content class="content">
+    <div class="row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nome:</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="digite o nome"
+          formControlName="nome"
+          (input)="uppercaseInput($event, 'name')"
+        />
+        <mat-error *ngIf="form.get('nome')?.hasError('required')"
+          >O campo Nome é obrigatório</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Idade:</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="digite Idade"
+          formControlName="idade"
+          (input)="uppercaseInput($event, 'age')"
+          maxlength="3"
+          min="0"
+          max="120"
+        />
+        <mat-error *ngIf="form.get('idade')?.hasError('required')"
+          >O campo Idade é obrigatório</mat-error
+        >
+        <mat-error *ngIf="form.get('idade')?.hasError('max')"
+          >A idade deve no máximo 3 dígitos</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Telefones</mat-label>
+      <mat-select formControlName="numero" multiple>
+        <mat-option
+          *ngFor="let numeroTelefone of form.get('numero')?.value"
+          [value]="numeroTelefone"
+          >{{ numeroTelefone.numero }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+    <div class="row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Adicionar novo Telefone</mat-label>
+        <input
+          matInput
+          placeholder="xx xxxx-xxxx"
+          formControlName="novoNumero"
+          (keyup.enter)="adicionarNumero($event)"
+        />
+        <mat-icon matSuffix (click)="adicionarNumero($event)">add_box</mat-icon>
+      </mat-form-field>
+    </div>
+    <div>
+      <button
+        mat-raised-button
+        type="button"
+        color="warn"
+        [mat-dialog-close]="false"
+      >
+        Cancelar
+      </button>
+      <button
+        style="margin: 10px"
+        mat-raised-button
+        color="accent"
+        type="submit"
+        (click)="onSubmit($event)"
+      >
+        {{ data ? "Atualizar" : "Salvar" }}
+      </button>
+    </div>
+  </div>
+</form>
